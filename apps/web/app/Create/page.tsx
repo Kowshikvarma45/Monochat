@@ -22,7 +22,7 @@ export default function RoomPage() {
         try {
             const response = await axios.post(
                 "http://localhost:3000/api/CreateRoom",
-                { roomname },
+                { roomname:roomname },
                 { headers: { "Content-Type": "application/json" } }
             );
 
