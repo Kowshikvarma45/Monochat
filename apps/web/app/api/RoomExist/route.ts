@@ -23,11 +23,18 @@ export async function POST(req: NextRequest) {
         // ✅ Check if Room Exists
         const response = await db.room.findUnique({
             where: { roomid },
+            select:{
+                roomid:true,
+                roomname:true
+            }
         });
-
+        console.log(response)
         if (response) {
             return NextResponse.json(
-                { msg: roomid },
+                {
+                    roomname: response.roomname,
+                    roomid:roomid
+                },
                 { status: 200 }
             );
         } else {

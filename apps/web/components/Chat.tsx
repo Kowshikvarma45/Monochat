@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { Send } from "lucide-react";
 
-export const Chat = ({roomId}:{roomId:string | string[] | undefined})=>{
+export const Chat = ({roomId,roomname}:{roomId:string | string[] | undefined,roomname:string | null})=>{
     console.log("receiverd roomid is : ",roomId)
     const session = useSession();
     const [messages, setMessages] = useState<{roomid:string | string[] | undefined, userid: string; name: string; msg: string }[]>([]);
@@ -41,7 +41,7 @@ export const Chat = ({roomId}:{roomId:string | string[] | undefined})=>{
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-gray-800 p-6">
             <div className="w-full max-w-md bg-white bg-opacity-10 backdrop-blur-md shadow-2xl rounded-xl overflow-hidden border border-gray-700">
                 <div className="bg-gradient-to-r from-green-500 to-green-400 text-white p-5 text-center font-bold text-xl">
-                    WebSocket Chat
+                    {roomname}
                 </div>
                 <div className="h-96 overflow-y-auto p-4 space-y-4 flex flex-col">
                 {messages

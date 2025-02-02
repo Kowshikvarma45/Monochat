@@ -18,10 +18,9 @@ export default function Home() {
             { headers: { "Content-Type": "application/json" } } // ✅ Explicitly set JSON
         );
         
-        console.log(res.status == 200)
-        if(res) {
-            console.log("hit there raa bava")
-            router.push(`../RoomChat/?roomid=${roomid}`)
+        if(res.status == 200) {
+            console.log("hit there raa bava",res.data)
+            router.push(`../RoomChat/?roomid=${roomid}&roomname=${res.data.roomname}`)
         }
         else {
             alert("sorry defined roomid doesnt exist")

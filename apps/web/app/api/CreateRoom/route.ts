@@ -2,14 +2,11 @@ import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@repo/db/db";
 
-export async function GET(req: NextRequest) {
+export async function POST(req: NextRequest) {
     try {
         const session = await getServerSession();
-
-        // ✅ Debugging Session
-        console.log("Session Data:", session);
-
-        // ✅ Ensure User is Logged In
+        const {roomname} = await req.json()
+        console.log("roomname : ", roomname)
         if (!session || !session.user || !session.user.email) {
             return NextResponse.json(
                 { msg: "Login required to create a room" },
@@ -17,10 +14,9 @@ export async function GET(req: NextRequest) {
             );
         }
 
-        // ✅ Fetch User ID from Database (if missing in session)
         const user = await db.user.findUnique({
             where: { email: session.user.email },
-            select: { userid: true }, // Assuming your user table has `id`
+            select: { userid: true }, 
         });
 
         if (!user) {
@@ -30,9 +26,12 @@ export async function GET(req: NextRequest) {
             );
         }
 
-        // ✅ Create Room
         const res = await db.room.create({
-            data: { creatorId: user.userid }, // Use fetched user ID
+            data: { 
+                creatorId: user.userid,
+                roomname:roomname
+            
+            }, 
         });
 
         return NextResponse.json(
