@@ -33,6 +33,7 @@ export const NEXTAUTH = {
         })
     ],
     secret:process.env.NEXTAUTH_SECRET,
+    
     callbacks: {
         jwt: async ({ user, token }: any) => {
             // console.log("user is " ,user)
@@ -50,7 +51,7 @@ export const NEXTAUTH = {
         try {
             const response = await db.user.findUnique({
                 where:{
-                    email:token.email
+                    email:token.email,
                 }
             })
             if(!response?.userid) {
@@ -67,6 +68,7 @@ export const NEXTAUTH = {
                       session.user.name = token.uid
                       session.user.userid = userid
                       session.user.password = token.pass
+                      session.user.email = token.email
                 }
                 return session
             }
@@ -74,7 +76,7 @@ export const NEXTAUTH = {
                 session.user.name = response.username
                 session.user.userid = response.userid
                 session.user.password = response.password
-
+                session.user.email = response.email
                 return session
             }
         }catch(err) {

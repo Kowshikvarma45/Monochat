@@ -24,6 +24,7 @@
   "dependencies": {
     "@react-spring/web": "^9.7.5",
     "@types/next-auth": "^3.13.0",
+    "axios": "^1.7.9",
     "next-auth": "^4.24.11"
   }
 }

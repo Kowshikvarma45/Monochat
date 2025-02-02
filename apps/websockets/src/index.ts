@@ -14,7 +14,6 @@ try {
             const roomid = obj.roomid;
             console.log(roomid)
             wss.clients.forEach((client) => {
-                console.log(client)
                 if(client.readyState == WebSocket.OPEN && client != ws) {
                 client.send(data,{binary:isBinary})
             }

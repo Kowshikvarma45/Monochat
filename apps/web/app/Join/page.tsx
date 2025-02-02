@@ -1,107 +1,53 @@
-"use client"
+"use client";
 
-import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function Home() {
-    const session = useSession();
-    const [messages, setMessages] = useState<{userid:string; name: string; msg: string }[]>([]);
-    const [input, setInput] = useState<string>("");
-    const [socket, setSocket] = useState<WebSocket | null>(null);
 
-    useEffect(() => {
-        // Establish a WebSocket connection
-        const ws = new WebSocket("ws://localhost:8080");
+    const [roomid,setroomid] = useState<string>("");
+    const router = useRouter()
 
-        // Store the WebSocket instance
-        setSocket(ws);
+    async function handlejoin(event: React.FormEvent) {
+        event.preventDefault();
 
-        // Handle incoming messages
-        ws.onmessage = (event) => {
-            const obj = JSON.parse(event.data);
-            setMessages((prev) => [...prev, {userid:obj.userid, name: obj.name, msg: obj.msg }]);
-        };
-
-        // Handle errors
-        ws.onerror = (error) => {
-            console.error("WebSocket error:", error);
-        };
-
-        // Clean up the WebSocket connection on unmount
-        return () => {
-            ws.close();
-        };
-    }, []);
-
-    // Send a message to the WebSocket server
-    const sendMessage = () => {
-        if (socket && input.trim() !== "") {
-            const obj = {
-                //@ts-ignore
-                userid:session.data?.user.userid,
-                name: session.data?.user?.name || "Unknown",
-                msg: input,
-            };
-            socket.send(JSON.stringify(obj));
-            setMessages((prev) => [...prev, obj]);
-            setInput(""); // Clear the input field
+        const res = await axios.post(
+            "http://localhost:3000/api/RoomExist",
+            { roomid: roomid }, 
+            { headers: { "Content-Type": "application/json" } } // ✅ Explicitly set JSON
+        );
+        
+        console.log(res.status == 200)
+        if(res) {
+            console.log("hit there raa bava")
+            router.push(`../RoomChat/?roomid=${roomid}`)
         }
-    };
+        else {
+            alert("sorry defined roomid doesnt exist")
+        }
+    }
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-6">
-            <div className="w-full max-w-md bg-white shadow-md rounded-md">
-                <div className="bg-green-500 text-white p-4 text-center rounded-t-md">
-                    <h1 className="text-xl font-bold">WebSocket Chat</h1>
-                </div>
-
-                {/* Message List */}
-                <div className="h-96 overflow-y-auto p-4 space-y-4">
-                    {messages.map((message, index) => (
-                        <div
-                            key={index}
-                            className={`flex ${
-                                //@ts-ignore
-                                message.name === session.data?.user?.name && message.userid === session.data.user.userid
-                                    ? "justify-end"
-                                    : "justify-start"
-                            }`}
-                        >
-                            <div
-                                className={`max-w-xs p-3 rounded-lg text-sm shadow-md ${
-                                    //@ts-ignore
-                                    message.name === session.data?.user?.name && message.userid === session.data.user.userid
-                                        ? "bg-green-500 text-white"
-                                        : "bg-gray-200 text-gray-800"
-                                }`}
-                            >
-                                <div className="font-semibold">
-                                    { //@ts-ignore
-                                    message.userid !== session.data.user.userid?message.name:""}
-                                </div>
-                                <div>{message.msg}</div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-
-                {/* Input Section */}
-                <div className="flex items-center p-4 border-t border-gray-300">
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-gray-800 p-6">
+            <div className="w-full max-w-md bg-white bg-opacity-10 backdrop-blur-md shadow-xl rounded-lg p-6 border border-gray-700">
+                <h2 className="text-2xl font-bold text-white text-center mb-4">Join a Chat Room</h2>
+                <form onSubmit={handlejoin} className="flex flex-col space-y-4">
                     <input
-                        className="flex-1 p-2 border border-gray-300 rounded-lg"
+                        className="w-full p-3 bg-gray-800 text-white border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                         type="text"
-                        placeholder="Type a message..."
-                        value={input}
-                        onChange={(e) => setInput(e.target.value)}
+                        placeholder="Enter Room ID"
+                        onChange={(e) => setroomid(e.target.value)}
                     />
                     <button
-                        className="ml-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
-                        onClick={sendMessage}
+                        type="submit"
+                        className="w-full bg-green-500 text-white py-3 rounded-lg text-lg font-semibold hover:bg-green-600 transition-all duration-200"
                     >
-                        Send
+                        Join Room
                     </button>
-                </div>
+                </form>
             </div>
         </div>
     );
+    
 }
