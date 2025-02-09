@@ -1,4 +1,3 @@
-
 "use client";
 import axios from "axios";
 import { signIn, useSession } from "next-auth/react";
@@ -6,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { Spinner } from "../../../../components/Spinner";
 import { motion } from "framer-motion";
+import { Alert } from "../../../../components/Alert";
 
 export default function LoginForm() {
     const router = useRouter();
@@ -13,31 +13,41 @@ export default function LoginForm() {
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [loading,setloading] = useState(false)
+    const [loading, setloading] = useState(false);
+    const [alertMsg, setAlertMsg] = useState<string | null>(null);
+
+    function showAlert(msg: string) {
+        setAlertMsg(msg);
+        setTimeout(() => setAlertMsg(null), 5000);
+    }
 
     async function handler(event: React.FormEvent) {
         event.preventDefault();
-        setloading(true)
-        if (username === "" || email === "" || password === "") {
-            alert("Enter all credentials to create an account");
-        } else {
-            try {
-                const res = await axios.post(
-                    "http://localhost:3000/api/CreateUser",
-                    { username, email, password },
-                    { headers: { "Content-Type": "application/json" } }
-                );
+        setloading(true);
 
-                if (res.status === 200) {
-                    alert("User successfully created. Redirecting to login page");
-                    await signIn();
-                } else {
-                    alert(JSON.stringify(res.data.msg));
-                }
-            } catch (error: any) {
-                console.error("Error:", error);
-                alert(error.response?.data?.msg || "Something went wrong.");
+        if (username === "" || email === "" || password === "") {
+            showAlert("Enter all credentials to create an account");
+            setloading(false);
+            return;
+        }
+
+        try {
+            const res = await axios.post(
+                "http://localhost:3000/api/CreateUser",
+                { username, email, password },
+                { headers: { "Content-Type": "application/json" } }
+            );
+
+            if (res.status === 200) {
+                showAlert("User successfully created. Redirecting to login page");
+                setTimeout(async () => await signIn(), 1500);
+            } else {
+                showAlert(res.data.msg);
+                setloading(false)
             }
+        } catch (error: any) {
+            console.error("Error:", error);
+            showAlert(error.response?.data?.msg || "Something went wrong.");
         }
     }
 
@@ -50,6 +60,7 @@ export default function LoginForm() {
     if (!session.data?.user) {
         return (
             <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
+                {alertMsg && <Alert msg={alertMsg} />}
                 <motion.div 
                     initial={{ opacity: 0, y: -20 }} 
                     animate={{ opacity: 1, y: 0 }}
@@ -62,7 +73,7 @@ export default function LoginForm() {
 
                     <form className="space-y-6" onSubmit={handler}>
                         <div className="space-y-4">
-                            {[
+                            {[ 
                                 { label: "Username", type: "text", value: username, setter: setUsername },
                                 { label: "Email", type: "email", value: email, setter: setEmail },
                                 { label: "Password", type: "password", value: password, setter: setPassword }
@@ -87,9 +98,9 @@ export default function LoginForm() {
                             whileTap={{ scale: 0.95 }}
                             type="submit"
                             className={`w-full py-3 bg-green-600 hover:bg-green-700 rounded-lg text-white font-semibold
-                               transition-all duration-300 shadow-md ${loading?"animate-pulse":"animate-none"}`}
+                               transition-all duration-300 shadow-md ${loading ? "animate-pulse" : "animate-none"}`}
                         >
-                            {loading?"Signing Up...":"Sign Up"}
+                            {loading ? "Signing Up..." : "Sign Up"}
                         </motion.button>
 
                         <div className="text-sm text-center text-gray-400">

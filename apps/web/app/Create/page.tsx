@@ -4,53 +4,61 @@ import axios from "axios";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ClipboardCopy, ArrowRight } from "lucide-react";
+import { Alert } from "../../components/Alert";
+import { motion } from "framer-motion";
 
 export default function RoomPage() {
     const [roomid, setRoomid] = useState("");
     const [roomname, setRoomname] = useState("");
     const [copied, setCopied] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [created,setcreated] = useState(false)
+    const [created, setCreated] = useState(false);
+    const [alertMsg, setAlertMsg] = useState<string | null>(null);
     const router = useRouter();
+
+    function showAlert(msg: string) {
+        setAlertMsg(msg);
+        setTimeout(() => setAlertMsg(null), 5000);
+    }
 
     const handleCreateRoom = async () => {
         if (roomname === "") {
-            alert("Please enter a room name.");
+            showAlert("Please enter a room name.");
             return;
         }
-        else {
-            setLoading(true);
+
+        setLoading(true);
         try {
             const response = await axios.post(
                 "http://localhost:3000/api/CreateRoom",
-                { roomname:roomname },
+                { roomname },
                 { headers: { "Content-Type": "application/json" } }
             );
+
             if (response.status === 200) {
-                alert("Room created successfully");
-                setcreated(true)
+                showAlert("Room created successfully");
+                setCreated(true);
                 setRoomid(response.data.roomid);
             } else {
-                alert("Failed to create a room. Please try again.");
+                showAlert("Failed to create a room. Please try again.");
             }
         } catch (err: any) {
-            alert("Error: " + err.response?.status + " " + err.message);
+            showAlert("Error: " + err.response?.status + " " + err.message);
         } finally {
             setLoading(false);
-        }
         }
     };
 
     const copyToClipboard = () => {
         navigator.clipboard.writeText(roomid).then(() => {
             setCopied(true);
-            setTimeout(() => setCopied(false), 2000); 
+            setTimeout(() => setCopied(false), 2000);
         });
     };
 
     const handleJoinRoom = () => {
         if (!roomid) {
-            alert("Please create a room first.");
+            showAlert("Please create a room first.");
             return;
         }
 
@@ -59,7 +67,13 @@ export default function RoomPage() {
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-slate-900 p-6">
-            <div className="bg-gray-800 text-white rounded-lg shadow-lg p-6 w-full max-w-md text-center">
+            {alertMsg && <Alert msg={alertMsg} />}
+            <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="bg-gray-800 text-white rounded-lg shadow-lg p-6 w-full max-w-md text-center"
+            >
                 <p className="text-lg font-semibold">
                     Room ID:{" "}
                     <span className="text-green-400 font-bold">{roomid || "Not created yet"}</span>
@@ -79,7 +93,7 @@ export default function RoomPage() {
                 <button
                     onClick={handleCreateRoom}
                     className="flex items-center justify-center px-4 py-2 bg-green-500 text-white rounded-lg shadow-md hover:bg-green-600 transition-all mt-4 w-full"
-                    disabled={loading || roomname === ""}
+                    disabled={loading}
                 >
                     {loading ? "Creating Room..." : "Create Room"}
                 </button>
@@ -100,7 +114,7 @@ export default function RoomPage() {
                     <ArrowRight size={18} className="mr-2" />
                     Join the Room
                 </button>
-            </div>
+            </motion.div>
         </div>
     );
 }

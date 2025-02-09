@@ -41,7 +41,7 @@ export async function POST(req:NextRequest) {
 
             }else {
                 return NextResponse.json({
-                    msg:"Email id alredy exist,try to signin"
+                    msg:"Email id already exist,try to signin"
                 },{
                     status:201
                 })

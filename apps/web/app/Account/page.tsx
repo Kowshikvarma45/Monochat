@@ -4,11 +4,13 @@ import { useSession, signIn, signOut } from "next-auth/react";
 import { Clipboard, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Spinner } from "../../components/Spinner";
+import { useState } from "react";
 
 export default function AccountPage() {
     const { data: session, status } = useSession();
     const user = session?.user;
     const router = useRouter();
+    const [loading,setloading] = useState(false)
 
     if (status === "loading") {
         return (
@@ -25,12 +27,13 @@ export default function AccountPage() {
                     <h2 className="text-2xl font-bold text-white">User Not Logged In</h2>
                     <p className="text-white mt-2 ">Login to verify your account</p>
                     <button
-                        className="mt-4 px-4 py-2 bg-green-600 text-white rounded-md shadow-md hover:bg-green-600 transition"
+                        className={`mt-4 px-4 py-2 bg-green-600 text-white rounded-md shadow-md hover:bg-green-600 transition ${loading?"animate-pulse":"animate-none"}`}
                         onClick={async () => {
+                            setloading(true)
                             router.push("../api/auth/signup");
                         }}
                     >
-                        Sign Up
+                        {loading?"Redirecting...":"Signup"}
                     </button>
                 </div>
             </div>

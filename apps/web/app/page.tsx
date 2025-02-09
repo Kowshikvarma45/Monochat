@@ -2,9 +2,13 @@
 import { SpotlightCard } from "../components/Spotlightcard";
 import { BlurText } from "../components/Blurtext";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function Home() {
   const router = useRouter()
+  const [loading,setloading] = useState(false)
+  const [loadingt,setloadingt] = useState(false)
+
   return (
     <div>
       <div className="min-h-screen bg-slate-900
@@ -32,26 +36,28 @@ export default function Home() {
         </div>
         <p className="text-gray-300 mb-5">Choose an option</p>
         <div className="flex flex-col gap-4">
-          <button className="w-full border-2 border-white text-white py-2 rounded-lg hover:bg-white hover:text-black hover:border-black
- hover:scale-105 transition"  onClick={()=>{
+          <button className={`w-full border-2 border-white text-white py-2 rounded-lg hover:bg-white hover:text-black hover:border-black
+ hover:scale-105 transition ${loading?"animate-pulse":"animate-none"}`}  onClick={()=>{
+  setloading(true)
   router.push("./Join")
  }}>
-            Join a Room
+            {loading?"Redirecting...":"Join the Room"}
           </button>
-          <button className="w-full border-2 border-white text-white py-2 rounded-lg hover:bg-white hover:text-black hover:border-black
- hover:scale-105 transition" onClick={()=>{
+          <button className={`w-full border-2 border-white text-white py-2 rounded-lg hover:bg-white hover:text-black hover:border-black
+ hover:scale-105 transition ${loadingt?"animate-pulse":"animate-none"}`} onClick={()=>{
+  setloadingt(true)
   router.push("./Create")
  }}>
-            Create a Room
+            {loadingt?"Redirecting...":"Create a Room"}
           </button>
         </div>
       </SpotlightCard>
       </div>
     </div>
       <footer className="bg-black py-6 text-center">
-        <p className="text-white">
-          Made with ❤️ by kowshik varma kucharallapati!
-        </p>
+        <div className="text-white">
+          Made with <span className="animate-pulse">❤️</span> by kowshik varma kucharallapati!
+        </div>
       </footer>
     </div>
       );

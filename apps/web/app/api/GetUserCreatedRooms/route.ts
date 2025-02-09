@@ -5,7 +5,6 @@ export async function POST(req:NextRequest) {
 
     try {
         const {userid} = await req.json();
-        console.log("userid is : ",userid)
 
         const response = await db.user.findUnique({
             where:{
@@ -15,7 +14,6 @@ export async function POST(req:NextRequest) {
                 createdRooms:true
             }
         })
-        console.log(response)
         if(!response)  {
             return NextResponse.json({
                 msg:"Sorry No Room exist for the given Roomid"

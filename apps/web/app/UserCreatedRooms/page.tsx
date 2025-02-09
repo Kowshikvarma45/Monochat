@@ -66,8 +66,8 @@ export default function CreatedRooms() {
               roomname={room.roomname}
               //@ts-ignore
               creator={session?.user?.username}
-              createdAt={new Date().toISOString()}
-              onJoin={() => alert(`Joining ${room.roomname}`)}
+              createdAt={new Date().toLocaleDateString()}
+              onJoin={`../RoomChat/?roomid=${room.roomid}&roomname=${room.roomname}`}
             />
           ))}
         </div>
