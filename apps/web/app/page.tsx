@@ -1,102 +1,58 @@
-import Image, { type ImageProps } from "next/image";
-import { Button } from "@repo/ui/button";
-import styles from "./page.module.css";
-
-type Props = Omit<ImageProps, "src"> & {
-  srcLight: string;
-  srcDark: string;
-};
-
-const ThemeImage = (props: Props) => {
-  const { srcLight, srcDark, ...rest } = props;
-
-  return (
-    <>
-      <Image {...rest} src={srcLight} className="imgLight" />
-      <Image {...rest} src={srcDark} className="imgDark" />
-    </>
-  );
-};
+"use client"
+import { SpotlightCard } from "../components/Spotlightcard";
+import { BlurText } from "../components/Blurtext";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const router = useRouter()
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <ThemeImage
-          className={styles.logo}
-          srcLight="turborepo-dark.svg"
-          srcDark="turborepo-light.svg"
-          alt="Turborepo logo"
-          width={180}
-          height={38}
-          priority
+    <div>
+      <div className="min-h-screen bg-slate-900
+ text-white flex flex-col items-center">
+      <header className="text-center mt-16 ml-1">
+        <BlurText 
+          text="Welcome to LogDoubts!"
+          delay={40}
+          animateBy="letters"
+          direction="top"
+          className="text-6xl flex justify-center font-bold"
         />
-        <ol>
-          <li>
-            Get started by editing <code>apps/web/app/page.tsx</code>
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new/clone?demo-description=Learn+to+implement+a+monorepo+with+a+two+Next.js+sites+that+has+installed+three+local+packages.&demo-image=%2F%2Fimages.ctfassets.net%2Fe5382hct74si%2F4K8ZISWAzJ8X1504ca0zmC%2F0b21a1c6246add355e55816278ef54bc%2FBasic.png&demo-title=Monorepo+with+Turborepo&demo-url=https%3A%2F%2Fexamples-basic-web.vercel.sh%2F&from=templates&project-name=Monorepo+with+Turborepo&repository-name=monorepo-turborepo&repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fturborepo%2Ftree%2Fmain%2Fexamples%2Fbasic&root-directory=apps%2Fdocs&skippable-integrations=1&teamSlug=vercel&utm_source=create-turbo"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://turbo.build/repo/docs?utm_source"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
+        <BlurText
+          text="Connect & Split that Confusion Out"
+          delay={50}
+          animateBy="words"
+          direction="top"
+          className="mt-2 flex justify-center text-xl"
+        />
+      </header>
+      <div className="flex justify-center mt-10 hover:scale-105">
+      <SpotlightCard className="w-150 p-10 py-15 text-center" spotlightColor="rgba(0, 229, 255, 0.2)">
+        <h2 className="text-2xl font-bold mb-4 text-white">Get Started</h2>
+        <div className="w-[200px] h-[200px] ml-4 bg-cover bg-center bg-no-repeat"style={{ backgroundImage: "url('/jumbopng.png')" }}>
         </div>
-        <Button appName="web" className={styles.secondary}>
-          Open alert
-        </Button>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com/templates?search=turborepo&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://turbo.build?utm_source=create-turbo"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to turbo.build →
-        </a>
+        <p className="text-gray-300 mb-5">Choose an option</p>
+        <div className="flex flex-col gap-4">
+          <button className="w-full border-2 border-white text-white py-2 rounded-lg hover:bg-white hover:text-black hover:border-black
+ hover:scale-105 transition"  onClick={()=>{
+  router.push("./Join")
+ }}>
+            Join a Room
+          </button>
+          <button className="w-full border-2 border-white text-white py-2 rounded-lg hover:bg-white hover:text-black hover:border-black
+ hover:scale-105 transition" onClick={()=>{
+  router.push("./Create")
+ }}>
+            Create a Room
+          </button>
+        </div>
+      </SpotlightCard>
+      </div>
+    </div>
+      <footer className="bg-black py-6 text-center">
+        <p className="text-white">
+          Made with ❤️ by kowshik varma kucharallapati!
+        </p>
       </footer>
     </div>
-  );
+      );
 }
