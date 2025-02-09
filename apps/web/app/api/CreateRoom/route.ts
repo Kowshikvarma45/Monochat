@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
         if (!session || !session.user || !session.user.email) {
             return NextResponse.json(
                 { msg: "Login required to create a room" },
-                { status: 400 }
+                { status: 203 }
             );
         }
 
@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
         if (!user) {
             return NextResponse.json(
                 { msg: "User not found in database" },
-                { status: 404 }
+                { status: 203 }
             );
         }
 

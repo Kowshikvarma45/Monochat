@@ -10,17 +10,15 @@ export async function POST(req: NextRequest) {
         }
         const data = await req.json();
 
-        // ✅ Check if roomid is provided
         if (!data.roomid) {
             return NextResponse.json(
                 { msg: "Room ID is required" },
-                { status: 400 }
+                { status: 203 }
             );
         }
 
         const roomid = data.roomid;
 
-        // ✅ Check if Room Exists
         const response = await db.room.findUnique({
             where: { roomid },
             select:{
@@ -28,7 +26,6 @@ export async function POST(req: NextRequest) {
                 roomname:true
             }
         });
-        console.log(response)
         if (response) {
             return NextResponse.json(
                 {
@@ -40,14 +37,14 @@ export async function POST(req: NextRequest) {
         } else {
             return NextResponse.json(
                 { msg: "No room ID found" },
-                { status: 404 } // ✅ 404 is correct for "not found"
+                { status: 202 } 
             );
         }
     } catch (err) {
         console.error("Prisma Error:", err);
         return NextResponse.json(
-            { msg: "Internal Server Error" },
-            { status: 500 } // ✅ Correct status for Prisma error
+            { msg: "Please check the Internet connection" },
+            { status: 500 }
         );
     }
 }

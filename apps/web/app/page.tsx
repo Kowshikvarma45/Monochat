@@ -7,18 +7,18 @@ export default function Home() {
   const router = useRouter()
   return (
     <div>
-      <div className="min-h-screen bg-gradient-to-r from-teal-400 via-blue-500 to-purple-600
+      <div className="min-h-screen bg-slate-900
  text-white flex flex-col items-center">
       <header className="text-center mt-16 ml-1">
         <BlurText 
-          text="Welcome to Logchat!"
+          text="Welcome to LogDoubts!"
           delay={40}
           animateBy="letters"
           direction="top"
           className="text-6xl flex justify-center font-bold"
         />
         <BlurText
-          text="Stay connected with your friends and join the fun!"
+          text="Connect & Split that Confusion Out"
           delay={50}
           animateBy="words"
           direction="top"
@@ -30,15 +30,15 @@ export default function Home() {
         <h2 className="text-2xl font-bold mb-4 text-white">Get Started</h2>
         <div className="w-[200px] h-[200px] ml-4 bg-cover bg-center bg-no-repeat"style={{ backgroundImage: "url('/jumbopng.png')" }}>
         </div>
-        <p className="text-gray-300 mb-5">Choose an option to start chatting:</p>
+        <p className="text-gray-300 mb-5">Choose an option</p>
         <div className="flex flex-col gap-4">
-          <button className="w-full border-2 border-white text-white py-2 rounded-lg hover:bg-gradient-to-r from-teal-800 via-blue-800 to-purple-800
+          <button className="w-full border-2 border-white text-white py-2 rounded-lg hover:bg-white hover:text-black hover:border-black
  hover:scale-105 transition"  onClick={()=>{
   router.push("./Join")
  }}>
             Join a Room
           </button>
-          <button className="w-full border-2 border-white text-white py-2 rounded-lg hover:bg-gradient-to-r from-teal-800 via-blue-800 to-purple-900
+          <button className="w-full border-2 border-white text-white py-2 rounded-lg hover:bg-white hover:text-black hover:border-black
  hover:scale-105 transition" onClick={()=>{
   router.push("./Create")
  }}>

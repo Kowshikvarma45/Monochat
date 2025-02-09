@@ -3,6 +3,7 @@
 import { useSession, signIn, signOut } from "next-auth/react";
 import { Clipboard, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { Spinner } from "../../components/Spinner";
 
 export default function AccountPage() {
     const { data: session, status } = useSession();
@@ -10,22 +11,26 @@ export default function AccountPage() {
     const router = useRouter();
 
     if (status === "loading") {
-        return <div>Loading...</div>; // Handle loading state
+        return (
+            <div className="min-h-screen items-center flex justify-center bg-slate-900 text-white animate-pulse text-5xl">
+                <Spinner></Spinner>
+            </div>
+        )
     }
 
     if (!user) {
         return (
-            <div className="min-h-screen flex flex-col justify-center items-center bg-gray-100 p-6">
-                <div className="bg-white shadow-lg rounded-lg p-6 text-center">
-                    <h2 className="text-2xl font-bold text-gray-800">User Not Logged In</h2>
-                    <p className="text-gray-600 mt-2">Login to verify your account</p>
+            <div className="min-h-screen flex flex-col justify-center items-center bg-slate-900 p-6">
+                <div className="bg-gray-800 shadow-lg rounded-lg p-6 text-center">
+                    <h2 className="text-2xl font-bold text-white">User Not Logged In</h2>
+                    <p className="text-white mt-2 ">Login to verify your account</p>
                     <button
-                        className="mt-4 px-4 py-2 bg-green-500 text-white rounded-md shadow-md hover:bg-green-600 transition"
+                        className="mt-4 px-4 py-2 bg-green-600 text-white rounded-md shadow-md hover:bg-green-600 transition"
                         onClick={async () => {
-                            await signIn();
+                            router.push("../api/auth/signup");
                         }}
                     >
-                        Sign In
+                        Sign Up
                     </button>
                 </div>
             </div>
@@ -33,15 +38,15 @@ export default function AccountPage() {
     }
 
     return (
-        <div className="min-h-screen flex justify-center items-center bg-gray-100 p-6">
-            <div className="w-full max-w-lg bg-white shadow-lg rounded-lg p-6">
+        <div className="min-h-screen flex justify-center items-center bg-gray-900 p-6">
+            <div className="w-full max-w-lg bg-gray-800 shadow-lg rounded-lg p-6">
                 <div className="flex items-center space-x-4">
                     <div className="w-14 h-14 bg-green-500 flex items-center justify-center text-white font-bold text-lg rounded-full">
                         {user.name ? user.name[0]?.toUpperCase() : ""}
                     </div>
                     <div>
-                        <h2 className="text-xl font-bold text-gray-800">{user.name}</h2>
-                        <p className="text-gray-500">{user.email}</p>
+                        <h2 className="text-xl font-bold text-white">{user.name}</h2>
+                        <p className="text-white">{user.email}</p>
                     </div>
                 </div>
 
