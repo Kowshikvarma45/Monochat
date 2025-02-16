@@ -9,6 +9,7 @@ export const Appbar = () => {
     const { data: session, status } = useSession();
     const router = useRouter();
     const [isOpen, setIsOpen] = useState(false);
+    const [created,setcreated] = useState(false)
 
     const isAuthenticated = session?.user;
 
@@ -44,10 +45,16 @@ export const Appbar = () => {
                         Account
                     </button>
                     <button
-                        className="px-3 py-1 border-2 border-white text-white rounded-md hover:scale-105 hover:bg-white duration-300 hover:text-black"
-                        onClick={() => router.push("../UserCreatedRooms")}
+                        className={`px-3 py-1 border-2 border-white text-white rounded-md hover:scale-105 hover:bg-white duration-300 hover:text-black ${created?"animate-pulse":"animate-none"}`}
+                        onClick={() => {
+                            setcreated(true)
+                            router.push("../UserCreatedRooms")
+                            setTimeout(() => {
+                                setcreated(false)
+                            }, 1000);
+                        }}
                     >
-                        Created Rooms
+                        {created?"Redirecting...":"Created Rooms"}
                     </button>
                     <button
                         className="px-3 py-1 border-2 border-white text-white rounded-md hover:scale-105 hover:bg-white duration-300 hover:text-black"

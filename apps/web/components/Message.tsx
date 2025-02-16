@@ -1,32 +1,97 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ThumbsUp } from "lucide-react";
 import { useSession } from "next-auth/react";
+import axios from "axios";
 
 interface MessageProps {
+  doubtid:string;
   userid: string;
   name: string;
   title?: string;
   description: string;
   createdat: string;
-  upvotes:number;
+  upvotes:{
+    userid:string
+  }[];
 }
 
-export const Message = ({ userid, name, title, description, createdat, upvotes }: MessageProps) => {
+export const Message = ({doubtid, userid, name, title, description, createdat, upvotes }: MessageProps) => {
   const session = useSession();
   //@ts-ignore
   const isUserMessage = userid === session.data?.user.userid;
-
   const [upvoted, setUpvoted] = useState(false);
-  const [upvoteCount, setUpvoteCount] = useState(upvotes);
+  const [upvoteCount, setUpvoteCount] = useState(upvotes.length);
   const [expanded, setExpanded] = useState(false);
+  const socketref = useRef<WebSocket | null>(null);
+
+  useEffect(()=>{
+    try {
+      const ws = new WebSocket("http://localhost:8080");
+      socketref.current = ws;
+      ws.onopen = ()=>console.log("websocket connected")
+      ws.onmessage = (event)=>{
+        const data = JSON.parse(event.data);
+        // console.log("data : ",data)
+        // console.log("data in ws of message : ",data)
+        if(data.type == "upvote" && data.doubtid == doubtid) {
+          setUpvoteCount(data.userupvotes.length);
+        }
+      }
+      ws.onerror = (err)=>{}
+      async function setupvotestate() {
+        const res = await axios.post("http://localhost:3000/api/UserExistCheck",{
+          doubtid:doubtid,
+          //@ts-ignore
+          userid:session.data?.user.userid
+        })
+        if(res.status == 200) {
+          setUpvoted(res.data.exist)
+        }else {
+          alert("upvotes fetch failed!")
+        }
+      }
+      setupvotestate()
+      return () => {
+        console.log("Closing WebSocket connection");
+        ws.close();
+      };
+    }catch(err) {
+      alert("Check the internet connection.")
+    }
+  },[])
 
   const MAX_LENGTH = 45; 
 
-  const handleUpvote = () => {
-    setUpvoted((prev) => !prev);
-    setUpvoteCount((prev) => (upvoted ? prev - 1 : prev + 1));
+  const handleUpvote = async() => {
+    // setUpvoteCount((prev) => (upvoted ? prev - 1 : prev + 1));
+
+    try {
+      const res = await axios.post("http://localhost:3000/api/setUpvotes",{
+        doubtid:doubtid,
+        //@ts-ignore
+        userid:session.data?.user.userid,
+        insert:!upvoted
+      })
+      if(res.status == 200) {
+        console.log("awaittt :",res.data)
+        setUpvoted((prev) => !prev);
+        setUpvoteCount(res.data.upvotes.length)
+        const obj = {
+          type:"upvote",
+          doubtid:doubtid,
+          //@ts-ignore
+          userid:session.data?.user.userid,
+          userupvotes:res.data.upvotes
+        }
+        socketref.current?.send(JSON.stringify(obj))
+      }else {
+        alert("some unknown error")
+      }
+    }catch(err) {
+      alert("check the internet connection")
+    }
   };
 
   return (

@@ -27,7 +27,11 @@ export async function POST(req:NextRequest) {
                         description: true,
                         doubtid: true,
                         timestamp:true,
-                        upvotes:true,
+                        upvotes:{
+                            select:{
+                                userid:true
+                            }
+                        },
                         creator:{
                             select:{
                                 username:true

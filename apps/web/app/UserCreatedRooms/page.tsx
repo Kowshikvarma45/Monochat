@@ -34,6 +34,9 @@ export default function CreatedRooms() {
         if (response.status === 200) {
           setRooms(response.data.createdrooms);
         }
+        else {
+          alert(response.data.msg)
+        }
       } catch (error) {
         console.error("Error fetching rooms:", error);
       } finally {

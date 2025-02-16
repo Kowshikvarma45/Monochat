@@ -12,9 +12,6 @@ export const Chat = ({ roomId, roomname }: { roomId: string | string[] | undefin
     const [messages, setMessages] = useState<
         { roomid: string; title: string; description: string; userid: string; doubtid:string; creator:{username: string}; upvotes: {
             userid: string;
-            username: string;
-            email: string;
-            password: string;
         }[]; timestamp: number }[]
     >([]);
     const [title, setTitle] = useState<string>("");
@@ -30,12 +27,31 @@ export const Chat = ({ roomId, roomname }: { roomId: string | string[] | undefin
         const ws = new WebSocket("ws://localhost:8080");
         socketRef.current = ws;
         ws.onopen = () => console.log("WebSocket Connected ✅");
+        // ws.onmessage = (event) => {
+        //     const obj = JSON.parse(event.data);
+        //     if(!obj.type) {
+        //         console.log("Received message from WebSocket:", obj);
+        //         setMessages((prev) => [...prev, obj]);
+        //     }
+        // };
         ws.onmessage = (event) => {
             const obj = JSON.parse(event.data);
-            console.log("Received message from WebSocket:", obj);
-
-            setMessages((prev) => [...prev, obj]);
+            console.log("object in chat : ",obj)
+            if (obj.type === "upvote") {
+                setMessages((prevMessages) =>
+                    prevMessages.map((msg) =>
+                        msg.doubtid === obj.doubtid
+                            ? { ...msg, upvotes: obj.userupvotes } 
+                            : msg
+                    )
+                );
+            }
+             else {
+                console.log("Received message from WebSocket:", obj);
+                setMessages((prev) => [...prev, obj]);
+            }
         };
+        
         ws.onerror = (error) => console.log("WebSocket error:", error);
 
         async function getprevchats() {
@@ -60,9 +76,16 @@ export const Chat = ({ roomId, roomname }: { roomId: string | string[] | undefin
         };
     }, []);
 
-    useEffect(() => {
+    const prevMessagesCount = useRef(messages.length);
+
+useEffect(() => {
+    // Only scroll when a new message is added
+    if (messages.length > prevMessagesCount.current) {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    }, [messages]);
+    }
+    prevMessagesCount.current = messages.length;
+}, [messages]);
+
 
     const copyToClipboard = () => {
         //@ts-ignore
@@ -238,12 +261,13 @@ export const Chat = ({ roomId, roomname }: { roomId: string | string[] | undefin
                     .map((message, index) => (
                         <Message
                             key={index}
-                            userid={message.userid}
+                            doubtid={message.doubtid}
+                            userid={String(message.userid)}
                             name={message.creator.username}
                             title={message.title}
                             description={message.description}
                             createdat={new Date(message.timestamp).toLocaleTimeString()}
-                            upvotes={0}
+                            upvotes={message.upvotes}
                         />
                     ))
             )}
