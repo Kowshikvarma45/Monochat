@@ -1,6 +1,6 @@
 "use client"
 
-import { ReactNode, useRef, useState, MouseEvent, FocusEvent } from "react";
+import { ReactNode, useRef, useState, MouseEvent} from "react";
 
 interface SpotlightCardProps {
   children: ReactNode;

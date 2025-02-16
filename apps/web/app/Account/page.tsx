@@ -1,6 +1,6 @@
 "use client";
 
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useSession,signOut } from "next-auth/react";
 import { Clipboard, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Spinner } from "../../components/Spinner";
