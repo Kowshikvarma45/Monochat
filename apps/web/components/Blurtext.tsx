@@ -1,7 +1,7 @@
 "use client"
 
 import { useRef, useEffect, useState } from "react";
-import { useSprings, animated, Any } from "@react-spring/web";
+import { useSprings, animated} from "@react-spring/web";
 
 interface BlurTextProps {
   text: string;

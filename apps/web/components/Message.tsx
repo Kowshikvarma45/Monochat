@@ -39,7 +39,7 @@ export const Message = ({doubtid, userid, name, title, description, createdat, u
           setUpvoteCount(data.userupvotes.length);
         }
       }
-      ws.onerror = (err)=>{}
+      ws.onerror = ()=>{}
       async function setupvotestate() {
         const res = await axios.post("http://localhost:3000/api/UserExistCheck",{
           doubtid:doubtid,
@@ -49,7 +49,7 @@ export const Message = ({doubtid, userid, name, title, description, createdat, u
         if(res.status == 200) {
           setUpvoted(res.data.exist)
         }else {
-          alert("upvotes fetch failed!")
+          console.log("upvotes fetch failed!")
         }
       }
       setupvotestate()

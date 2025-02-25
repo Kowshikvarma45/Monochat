@@ -55,6 +55,7 @@ export async function POST(req:NextRequest) {
             })
         }
     }catch(err) {
+        console.log("Prisma Error:", err);
         return NextResponse.json({
             msg:"Please check your Internet connection"
         },{

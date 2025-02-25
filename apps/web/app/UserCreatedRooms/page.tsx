@@ -38,7 +38,8 @@ export default function CreatedRooms() {
           alert(response.data.msg)
         }
       } catch (error) {
-        console.error("Error fetching rooms:", error);
+        alert("reload again!")
+        console.log("Error fetching rooms:", error);
       } finally {
         setLoading(false);
       }

@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@repo/db/db";
 import { getServerSession } from "next-auth";
-import { timeStamp } from "console";
 
 export async function POST(req:NextRequest) {
     const session = await getServerSession()
@@ -48,6 +47,7 @@ export async function POST(req:NextRequest) {
             })
         }
     }catch(err) {
+        console.log("Prisma Error:", err);
         return NextResponse.json({
             msg:"please check the internet connection"
         },{

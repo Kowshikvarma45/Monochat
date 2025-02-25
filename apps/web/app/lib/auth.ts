@@ -1,8 +1,4 @@
-import NextAuth from "next-auth/next"
 import CredentialsProvider from 'next-auth/providers/credentials';
-import GitHubProvider from "next-auth/providers/github";
-import { db } from "@repo/db/db";
-import { to } from "@react-spring/web";
 import { User } from "next-auth";
 
 interface sessiontype extends User  {

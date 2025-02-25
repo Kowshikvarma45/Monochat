@@ -39,9 +39,10 @@ export async function POST(req: NextRequest) {
             { status: 200 }
         );
 
-    } catch (error:any) {
+    } catch (error) {
         console.error("CreateRoom Error:", error);
         return NextResponse.json(
+            //@ts-ignore
             { msg: "Internal Server Error", error: error.message },
             { status: 500 }
         );

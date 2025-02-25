@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
             );
         }
     } catch (err) {
-        console.error("Prisma Error:", err);
+        console.log("Prisma Error:", err);
         return NextResponse.json(
             { msg: "Please check the Internet connection" },
             { status: 500 }

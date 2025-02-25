@@ -25,6 +25,7 @@
     "@react-spring/web": "^9.7.5",
     "@types/next-auth": "^3.13.0",
     "axios": "^1.7.9",
+    "framer-motion": "^12.4.3",
     "next-auth": "^4.24.11"
   }
 }

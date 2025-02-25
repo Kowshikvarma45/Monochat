@@ -2,7 +2,7 @@
 
 import { useSession } from "next-auth/react";
 import { useEffect, useState, useRef } from "react";
-import { Send, ChevronDown, Copy, Clipboard } from "lucide-react";
+import { Send, ChevronDown,Clipboard } from "lucide-react";
 import { Message } from "./Message";
 import axios from "axios";
 import { Spinner } from "./Spinner";
@@ -68,6 +68,7 @@ export const Chat = ({ roomId, roomname }: { roomId: string | string[] | undefin
             }
             }catch(err) {
                 alert("check the Internet connection")
+                console.log(err)
             }
         }
         getprevchats()
@@ -135,6 +136,7 @@ useEffect(() => {
                 }
             }catch(err) {
                 alert("network error message not sent")
+                console.log(err)
                 setloading(false)
                 return
             }
@@ -158,7 +160,7 @@ useEffect(() => {
     });
 
     return (
-        <div className="h-screen flex bg-gray-900 p-6">
+        <div className="h-screen bg-gray-900 flex">
             {/* Left Side (Dropdown & Input Fields) */}
             <div className="lg:w-[40%] w-full p-4 bg-gray-700 border-r border-gray-600">
                 {/* Sorting Dropdown */}
@@ -250,7 +252,7 @@ useEffect(() => {
             </div>
 
             {/* Right Side (Messages Display) */}
-            <div className="lg:w-[60%] w-full h-[680px] overflow-y-auto px-6 py-4 flex flex-col space-y-4 scrollbar-thin scrollbar-thumb-gray-600">
+            <div className="lg:w-[60%] w-full h-auto overflow-y-auto px-6 py-4 flex flex-col space-y-4 scrollbar-thin scrollbar-thumb-gray-600">
             {msgloading ? (
                 <div className="flex justify-center">
                     <Spinner></Spinner>

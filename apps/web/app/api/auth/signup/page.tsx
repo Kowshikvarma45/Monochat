@@ -1,5 +1,5 @@
 "use client";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
@@ -45,9 +45,10 @@ export default function LoginForm() {
                 showAlert(res.data.msg);
                 setloading(false)
             }
-        } catch (error: any) {
-            console.error("Error:", error);
-            showAlert(error.response?.data?.msg || "Something went wrong.");
+        } catch (err) {
+            console.log("Error:", err);
+            //@ts-ignore
+            showAlert(err.response?.data?.msg || "Something went wrong.");
         }
     }
 

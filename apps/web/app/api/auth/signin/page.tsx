@@ -101,7 +101,7 @@ export default function SignInForm() {
                         {loading ? "Signing in ..." : "Signin"}
                     </button>
                     <p className="text-sm text-center text-gray-400">
-                        Don't have an account?
+                    {`Don't`} have an account?
                         <button
                             type="button"
                             className="text-green-500 hover:text-green-400 font-medium ml-1"
